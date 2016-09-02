@@ -16,7 +16,7 @@
 	 (parse-integer (elt attr 0) :junk-allowed t)
 	 (equal 1 0))))
 
-(defvar *input-htmls* (rest sb-ext:*posix-argv*))
+(defvar *input-pdfs* (rest sb-ext:*posix-argv*))
 
 (defvar *doc*)
 
@@ -25,7 +25,7 @@
 					    ,(format nil "~d" i)
 					    "-o"
 					    ,(format nil "p_~d.html" i)
-					    ,(first *input-htmls*)))
+					    ,(first *input-pdfs*)))
 
 
   (setf *doc* (build-doc-from-path (format nil "p_~d.html" i)))
