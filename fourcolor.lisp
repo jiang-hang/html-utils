@@ -20,7 +20,12 @@
 
 (defvar *doc*)
 
-(dotimes (i 10)
+(defvar *pages* (list 1 2 3 5 6 11 12 13 14))
+(defvar *pages-more* (loop for i from 15 to 276 collect i))
+(nconc *pages* *pages-more*)
+
+;(dotimes (i 10)
+(dolist (i *pages* )
   (external-program:run "pdf2txt.py" `("-Y" "loose" "-t" "html" "-p"
 					    ,(format nil "~d" i)
 					    "-o"
@@ -70,6 +75,23 @@
 					"-t" "markdown"
 					"--filter" "/home/xuyang/meteorTrans/stripspan.py"
 					"-o" ,(format nil "./filtered_p~d.md" i)
-					,(format nil "./p_~d.md" i))) 
+					,(format nil "./p_~d.md" i)))
+
+  
   )
+
+; merge the files
+(format t "##################################################################")
+
+(with-open-file (stream "./merge.sh" :direction :output :if-exists :supersede)
+  (format stream "rm -rfv ./final.md~%")
+  (format stream "touch ./final.md~%")
+  (dolist (i *pages*)
+    (format stream "echo \"\" >> final.md~%")
+    (format stream "echo \"//page ~d\" >> final.md~%" i)
+    (format stream "echo \"\" >> final.md~%")
+    (format stream "cat ./filtered_p~d.md >> final.md~%" i)
+    ))
+    
+
 
